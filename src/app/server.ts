@@ -1,8 +1,13 @@
-import app from './app';
-import "dotenv/config";
+import { createApp } from './app';
+import { env } from '../shared/config/env';
+import { connectDB } from '../shared/config/database';
 
-const PORT = process.env.PORT || 5000;
+export const startServer = async () => {
+   await connectDB();
 
-app.listen(PORT, () => {
-   console.log(`Backend running on port ${PORT}`);
-});
+   const app = createApp();
+
+   app.listen(env.PORT, () => {
+      console.log(`Backend running on port ${env.PORT}`);
+   });
+};
