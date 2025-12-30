@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import authRoutes from "../modules/auth/api/auth.routes"
+import { errorMiddleware } from '../shared/middleware/error.middleware';
 
 export const createApp = () => {
    const app = express();
@@ -18,6 +19,10 @@ export const createApp = () => {
       res.send("OK");
    });
 
+
+
+
+   app.use(errorMiddleware);
 
    return app;
 };
