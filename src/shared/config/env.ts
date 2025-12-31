@@ -1,10 +1,17 @@
-import dotenv from 'dotenv';
+import { z } from "zod";
 
-dotenv.config();
+const envSchema = z.object({
+   PORT: z.string().default("5000"),
+   MONGO_URI: z.string().min(1, "MONGO_URI is required"),
+   JWT_SECRET: z.string().min(1, "JWT_SECRET is required"),
+   JWT_EXPIRES_IN: z.string().default("7d"),
+});
 
-export const env = {
-   PORT: process.env.PORT || '5000',
-   MONGO_URI: process.env.MONGO_URI || '',
-   JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET || '',
-   JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET || '',
-};
+const parsedEnv = envSchema.safeParse(process.env);
+
+if (!parsedEnv.success) {
+   console.error("Invalid environment variables:", parsedEnv.error.format());
+   process.exit(1);
+}
+
+export const env = parsedEnv.data;
