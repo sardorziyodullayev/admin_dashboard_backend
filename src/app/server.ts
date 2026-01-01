@@ -4,6 +4,7 @@ dotenv.config();
 import { createApp } from './app';
 import { env } from '../shared/config/env';
 import { connectDB } from '../shared/config/database';
+import { logger } from '../shared/logger';
 
 export const startServer = async () => {
    await connectDB();
@@ -11,6 +12,6 @@ export const startServer = async () => {
    const app = createApp();
 
    app.listen(env.PORT, () => {
-      console.log(`Backend running on port ${env.PORT}`);
+      logger.info(`Backend running on port ${env.PORT}`);
    });
 };
