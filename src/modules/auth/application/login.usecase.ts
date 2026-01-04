@@ -7,20 +7,17 @@ export class LoginUseCase {
    constructor(private userRepo: UserRepository) { }
 
    async execute(input: LoginInput) {
-      // Find user by email
       const user = await this.userRepo.findByEmail(input.email);
       if (!user) {
          throw new Error('Invalid email or password');
       }
 
-      // Compare passwords
       const isMatch = await bcrty.compare(input.password, user.password);
       if (!isMatch) {
          throw new Error('Invalid email or password');
       }
 
-      // Generate JWT token
-      const token = jwt.sign(
+      const accessToken = jwt.sign(
          {
             userId: user.id,
             role: user.role,
@@ -29,8 +26,18 @@ export class LoginUseCase {
          { expiresIn: '1d' }
       );
 
+      const refreshToken = jwt.sign(
+         {
+            userId: user.id,
+            role: user.role,
+         },
+         process.env.JWT_REFRESH_SECRET as string,
+         { expiresIn: '7d' }
+      );
+
       return {
-         token,
+         accessToken,
+         refreshToken,
          user: {
             id: user.id,
             email: user.email,
