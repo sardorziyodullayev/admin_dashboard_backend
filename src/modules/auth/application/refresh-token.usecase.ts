@@ -4,6 +4,7 @@ import { generateAccessToken } from '../../../shared/utils/token';
 
 interface RefreshTokenPayload {
    userId: string;
+   role: string;
 }
 
 export class RefreshTokenUseCase {
@@ -12,6 +13,7 @@ export class RefreshTokenUseCase {
          const decode = jwt.verify(refreshToken, env.JWT_REFRESH_SECRET) as RefreshTokenPayload;
          const accessToken = generateAccessToken({
             userId: decode.userId,
+            role: decode.role
          })
 
          return { accessToken };

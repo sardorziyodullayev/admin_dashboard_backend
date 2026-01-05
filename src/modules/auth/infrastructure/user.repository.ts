@@ -21,4 +21,8 @@ export class UserRepository {
       const created = await UserModel.create(user);
       return created.toObject();
    }
+
+   async findById(id: string): Promise<User | null> {
+      return UserModel.findById(id).lean();
+   }
 };

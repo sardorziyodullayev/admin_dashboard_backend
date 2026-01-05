@@ -5,11 +5,13 @@ import { roleMiddleware } from "../../../shared/middleware/role.middleware";
 import { validate } from "../../../shared/middleware/validation.middleware";
 import { loginSchema, registerSchema } from "../domain/auth.schema";
 import { refreshTokenController } from "./refresh.controller";
+import { meController } from "./me.controller";
 
 const router = Router();
 
 router.post("/register", validate(registerSchema), registerController);
 router.post("/login", validate(loginSchema), loginController);
+router.get("/me", authMiddleware, meController);
 router.post("/refresh", refreshTokenController);
 
 router.get("/me", authMiddleware, (req: any, res) => {
