@@ -20,7 +20,7 @@ export class LoginUseCase {
       }
 
       const payload = {
-         userId: user.id,
+         userId: user.id.toString(),
          role: user.role,
       };
 

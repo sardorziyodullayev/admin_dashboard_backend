@@ -11,15 +11,8 @@ const router = Router();
 
 router.post("/register", validate(registerSchema), registerController);
 router.post("/login", validate(loginSchema), loginController);
-router.get("/me", authMiddleware, meController);
 router.post("/refresh", refreshTokenController);
-
-router.get("/me", authMiddleware, (req: any, res) => {
-   res.json({
-      message: "Protected route",
-      user: req.user,
-   });
-});
+router.get("/me", authMiddleware, meController);
 
 router.get("/admin-only", authMiddleware, roleMiddleware(["admin"]), (req: any, res) => {
    res.json({ message: "Admin access granted" })

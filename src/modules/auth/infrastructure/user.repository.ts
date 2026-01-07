@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import { User } from "../domain/user.entity";
+import { User, UserRole } from "../domain/user.entity";
 
-const userSchema = new mongoose.Schema<User>(
+const userSchema = new mongoose.Schema(
    {
       email: { type: String, required: true, unique: true },
       password: { type: String, required: true },
@@ -10,19 +10,43 @@ const userSchema = new mongoose.Schema<User>(
    { timestamps: true }
 );
 
-const UserModel = mongoose.model<User>("User", userSchema);
+const UserModel = mongoose.model("User", userSchema);
 
 export class UserRepository {
    async findByEmail(email: string): Promise<User | null> {
-      return UserModel.findOne({ email }).lean();
-   }
+      const user = await UserModel.findOne({ email }).lean();
+      if (!user) return null;
 
-   async create(user: Omit<User, "id">): Promise<User> {
-      const created = await UserModel.create(user);
-      return created.toObject();
+      return {
+         id: user._id.toString(),
+         email: user.email,
+         password: user.password,
+         role: user.role as UserRole,
+         createdAt: user.createdAt,
+      };
    }
 
    async findById(id: string): Promise<User | null> {
-      return UserModel.findById(id).lean();
+      const user = await UserModel.findById(id).lean();
+      if (!user) return null;
+
+      return {
+         id: user._id.toString(),
+         email: user.email,
+         password: user.password,
+         role: user.role as UserRole,
+         createdAt: user.createdAt,
+      };
    }
-};
+
+   async create(user: Omit<User, "id" | "createdAt">): Promise<User> {
+      const created = await UserModel.create(user);
+      return {
+         id: created._id.toString(),
+         email: created.email,
+         password: created.password,
+         role: created.role as UserRole,
+         createdAt: created.createdAt,
+      };
+   }
+}
