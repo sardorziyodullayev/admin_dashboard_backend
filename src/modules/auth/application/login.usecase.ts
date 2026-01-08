@@ -2,9 +2,10 @@ import bcrypt from 'bcrypt';
 import { UserRepository } from "../infrastructure/user.repository";
 import { LoginInput } from "../domain/auth.types";
 import { generateAccessToken, generateRefreshToken, } from "../../../shared/utils/token";
+import { RefreshTokenRepository } from '../infrastructure/refresh-token.repository';
 
 export class LoginUseCase {
-   constructor(private userRepo: UserRepository) { }
+   constructor(private userRepo: UserRepository, private refreshTokenRepo: RefreshTokenRepository) { }
 
    async execute(input: LoginInput) {
       const user = await this.userRepo.findByEmail(input.email);
@@ -26,6 +27,13 @@ export class LoginUseCase {
 
       const accessToken = generateAccessToken(payload);
       const refreshToken = generateRefreshToken(payload);
+
+      await this.refreshTokenRepo.save({
+         userId: user.id,
+         token: refreshToken,
+         expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), 
+      });
+
 
       return {
          accessToken,

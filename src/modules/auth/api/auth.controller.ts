@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { RegisterUseCase } from "../application/register.usecase";
 import { LoginUseCase } from "../application/login.usecase";
 import { UserRepository } from "../infrastructure/user.repository";
+import { RefreshTokenRepository } from "../infrastructure/refresh-token.repository";
 
 export const registerController = async (req: Request, res: Response) => {
    try {
@@ -17,7 +18,7 @@ export const registerController = async (req: Request, res: Response) => {
 
 export const loginController = async (req: Request, res: Response) => {
    try {
-      const useCase = new LoginUseCase(new UserRepository());
+      const useCase = new LoginUseCase(new UserRepository(), new RefreshTokenRepository());
 
       const result = await useCase.execute(req.body);
 
