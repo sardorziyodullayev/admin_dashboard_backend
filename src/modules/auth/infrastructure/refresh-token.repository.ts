@@ -22,11 +22,17 @@ export class RefreshTokenRepository {
       return created.toObject();
    }
 
-   async findByToken(token: string) {
-      return RefreshTokenModel.findOne({ token }).lean();
+   async findValidToken(token: string) {
+      return RefreshTokenModel.findOne({ token, expiresAt: { $gt: new Date() } }).lean();
    }
 
-   async delete(token: string) {
+   async deleteByToken(token: string) {
       return RefreshTokenModel.deleteOne({ token });
+   }
+
+   async deleteExpiredTokens() {
+      await RefreshTokenModel.deleteMany({
+         expiresAt: { $lt: new Date() },
+      });
    }
 }

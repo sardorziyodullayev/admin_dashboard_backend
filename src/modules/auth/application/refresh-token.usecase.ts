@@ -23,10 +23,10 @@ export class RefreshTokenUseCase {
          throw new Error("Invalid refresh token");
       }
 
-      const storedToken = await this.refreshTokenRepo.findByToken(refreshToken);
+      const storedToken = await this.refreshTokenRepo.findValidToken(refreshToken);
 
       if (!storedToken) {
-         throw new Error("Refresh token revoked");
+         throw new Error("Refresh token expired or not found");
       }
 
       const accessToken = generateAccessToken({
