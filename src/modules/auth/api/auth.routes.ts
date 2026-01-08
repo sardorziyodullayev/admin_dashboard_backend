@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { loginController, registerController } from "./auth.controller";
+import { loginController, logoutController, registerController } from "./auth.controller";
 import { authMiddleware } from "../../../shared/middleware/auth.middleware";
 import { roleMiddleware } from "../../../shared/middleware/role.middleware";
 import { validate } from "../../../shared/middleware/validation.middleware";
@@ -11,6 +11,7 @@ const router = Router();
 
 router.post("/register", validate(registerSchema), registerController);
 router.post("/login", validate(loginSchema), loginController);
+router.post("/logout", logoutController);
 router.post("/refresh", refreshTokenController);
 router.get("/me", authMiddleware, meController);
 
