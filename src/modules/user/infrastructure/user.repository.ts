@@ -11,6 +11,18 @@ const UserModel = mongoose.model<User>("User", userSchema);
 
 export class UserRepository {
 
+   async findById(id: string): Promise<User | null> {
+      return UserModel.findById(id).lean();
+   }
+
+   async findByEmail(email: string): Promise<User | null> {
+      return UserModel.findOne({ email }).lean();
+   }
+
+   async updateById(id: string, data: Partial<User>) {
+      return await UserModel.findByIdAndUpdate(id, data, { new: true }).lean();
+   }
+
    async findAll(
       page: number,
       limit: number,
