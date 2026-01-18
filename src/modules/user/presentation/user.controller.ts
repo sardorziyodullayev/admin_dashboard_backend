@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { AuthRequest } from "../../../shared/middleware/auth.middleware"; // 🔑 bu kerak
+import { AuthRequest } from "../../../shared/middleware/auth.middleware"; 
 import { UserRepository } from "../infrastructure/user.repository";
 import { GetUsersUseCase } from "../application/get-users.usecase";
 import { UpdateMeUseCase } from "../application/update-me.usecase";
