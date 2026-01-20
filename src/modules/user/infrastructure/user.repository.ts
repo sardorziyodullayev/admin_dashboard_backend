@@ -19,8 +19,18 @@ export class UserRepository {
       return UserModel.findOne({ email }).lean();
    }
 
+   async create(user: Omit<User, "id" | "createdAt">) {
+      const created = await UserModel.create(user);
+      return created.toObject();
+   }
+
    async updateById(id: string, data: Partial<User>) {
       return await UserModel.findByIdAndUpdate(id, data, { new: true }).lean();
+   }
+
+   async deleteById(id: string) {
+      const deleted = await UserModel.findByIdAndDelete(id).lean();
+      return deleted;
    }
 
    async findAll(
