@@ -5,6 +5,7 @@ import { GetUsersUseCase } from "../application/get-users.usecase";
 import { UpdateMeUseCase } from "../application/update-me.usecase";
 import { CreateUserUseCase } from "../application/create-user.usecase";
 import { DeleteUserUseCase } from "../application/delete-user.usecase";
+import { UpdateUserUseCase } from "../application/update-user.usecase";
 
 export const getUsersController = async (req: AuthRequest, res: Response) => {
    try {
@@ -44,6 +45,16 @@ export const createUserController = async (req: AuthRequest, res: Response) => {
          role: req.body.role,
       });
       res.status(201).json(user);
+   } catch (error: any) {
+      res.status(400).json({ message: error.message });
+   }
+};
+
+export const updateUserController = async (req: AuthRequest, res: Response) => {
+   try {
+      const useCase = new UpdateUserUseCase(new UserRepository());
+      const updated = await useCase.execute({ userId: req.params.id, ...req.body });
+      res.status(200).json(updated);
    } catch (error: any) {
       res.status(400).json({ message: error.message });
    }
